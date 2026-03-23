@@ -18,7 +18,7 @@ st.markdown("### 📊 Monitoring Faktor Penyebab Dropout Mahasiswa")
 # =========================
 @st.cache_data
 def load_data():
-    df = pd.read_csv(r"D:\Submission\data.csv", sep=';')
+    df = pd.read_csv(r"data.csv", sep=';')
     df.columns = df.columns.str.strip().str.replace(" ", "_")
     return df
 
