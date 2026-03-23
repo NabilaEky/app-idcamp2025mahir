@@ -75,7 +75,17 @@ st.markdown("---")
 # =========================
 st.subheader("📊 Visualisasi Data")
 
+# =========================
+# Ubah kolom biner menjadi Yes/No untuk visualisasi
+# =========================
+binary_cols = ['Tuition_fees_up_to_date', 'Scholarship_holder']
+
+for col in binary_cols:
+    df[col] = df[col].map({0: "No", 1: "Yes"})
+    
+# =========================
 # ROW 1
+# =========================
 col1, col2 = st.columns(2)
 
 with col1:
@@ -113,13 +123,13 @@ with col2:
 
     sns.countplot(
         data=df,
-        x='Tuition_fees_up_to_date',
+        x='Tuition_fees_up_to_date',  # sekarang sudah Yes/No
         hue='Status',
         palette='Set2',
         ax=ax2
     )
 
-    ax2.set_xlabel("Pembayaran")
+    ax2.set_xlabel("Pembayaran (Yes/No)")
     ax2.set_ylabel("Jumlah")
 
     for p in ax2.patches:
@@ -137,9 +147,9 @@ with col2:
 
     st.pyplot(fig2)
 
-st.markdown("---")
-
+# =========================
 # ROW 2
+# =========================
 col3, col4 = st.columns(2)
 
 with col3:
@@ -149,11 +159,14 @@ with col3:
 
     sns.countplot(
         data=df,
-        x='Scholarship_holder',
+        x='Scholarship_holder',  # sekarang sudah Yes/No
         hue='Status',
         palette='Set3',
         ax=ax3
     )
+
+    ax3.set_xlabel("Beasiswa (Yes/No)")
+    ax3.set_ylabel("Jumlah")
 
     for p in ax3.patches:
         height = p.get_height()
@@ -169,23 +182,6 @@ with col3:
             )
 
     st.pyplot(fig3)
-
-with col4:
-    st.markdown("### 4. Pengaruh nilai semester 1 terhadap status siswa")
-
-    fig4, ax4 = plt.subplots()
-
-    sns.boxplot(
-        data=df,
-        x='Status',
-        y='Curricular_units_1st_sem_grade',
-        palette='pastel',
-        ax=ax4
-    )
-
-    st.pyplot(fig4)
-
-st.markdown("---")
 
 # ROW 3
 col5, col6 = st.columns(2)
