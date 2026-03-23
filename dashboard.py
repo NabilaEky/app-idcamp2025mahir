@@ -183,6 +183,23 @@ with col3:
 
     st.pyplot(fig3)
 
+with col4:
+    st.markdown("### 4. Pengaruh nilai semester 1 terhadap status siswa")
+
+    fig4, ax4 = plt.subplots()
+
+    sns.boxplot(
+        data=df,
+        x='Status',
+        y='Curricular_units_1st_sem_grade',
+        palette='pastel',
+        ax=ax4
+    )
+
+    st.pyplot(fig4)
+
+st.markdown("---")
+
 # ROW 3
 col5, col6 = st.columns(2)
 
