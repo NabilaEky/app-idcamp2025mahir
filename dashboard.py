@@ -18,7 +18,7 @@ st.markdown("### 📊 Monitoring Faktor Penyebab Dropout Mahasiswa")
 # =========================
 @st.cache_data
 def load_data():
-    df = pd.read_csv(r"data.csv", sep=';')
+    df = pd.read_csv("data.csv", sep=';')
     df.columns = df.columns.str.strip().str.replace(" ", "_")
     return df
 
@@ -41,7 +41,7 @@ for col in required_cols:
         st.stop()
 
 # =========================
-# FILTER
+# FILTER DASHBOARD (SEMUA STATUS BOLEH)
 # =========================
 st.sidebar.header("Filter Data")
 
@@ -51,14 +51,14 @@ status_filter = st.sidebar.multiselect(
     default=df['Status'].unique()
 )
 
-df = df[df['Status'].isin(status_filter)]
+df_filtered = df[df['Status'].isin(status_filter)]
 
 # =========================
 # KPI
 # =========================
-total = len(df)
-dropout = len(df[df['Status'] == 'Dropout'])
-graduate = len(df[df['Status'] == 'Graduate'])
+total = len(df_filtered)
+dropout = len(df_filtered[df_filtered['Status'] == 'Dropout'])
+graduate = len(df_filtered[df_filtered['Status'] == 'Graduate'])
 
 dropout_rate = (dropout / total) * 100 if total > 0 else 0
 
@@ -75,14 +75,13 @@ st.markdown("---")
 # =========================
 st.subheader("📊 Visualisasi Data")
 
-# =========================
-# Ubah kolom biner menjadi Yes/No untuk visualisasi
-# =========================
-binary_cols = ['Tuition_fees_up_to_date', 'Scholarship_holder']
+df_vis = df_filtered.copy()
 
+# Ubah biner ke Yes/No
+binary_cols = ['Tuition_fees_up_to_date', 'Scholarship_holder']
 for col in binary_cols:
-    df[col] = df[col].map({0: "No", 1: "Yes"})
-    
+    df_vis[col] = df_vis[col].map({0: "No", 1: "Yes"})
+
 # =========================
 # ROW 1
 # =========================
@@ -90,61 +89,14 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.markdown("### 1. Distribusi Status")
-
     fig1, ax1 = plt.subplots()
-    colors = ['#4CAF50', '#F44336', '#2196F3']
-
-    df['Status'].value_counts().plot(
-        kind='bar',
-        ax=ax1,
-        color=colors
-    )
-
-    ax1.set_ylabel("Jumlah")
-    ax1.set_xlabel("")
-    ax1.tick_params(axis='x', rotation=0)
-
-    for p in ax1.patches:
-        ax1.annotate(
-            f"{int(p.get_height())}",
-            (p.get_x() + p.get_width() / 2, p.get_height()),
-            ha='center',
-            va='bottom',
-            xytext=(0, 3),
-            textcoords='offset points'
-        )
-
+    df_vis['Status'].value_counts().plot(kind='bar', ax=ax1)
     st.pyplot(fig1)
 
 with col2:
-    st.markdown("### 2. Pengaruh status pembayaran terhadap dropout")
-
+    st.markdown("### 2. Pengaruh Pembayaran")
     fig2, ax2 = plt.subplots()
-
-    sns.countplot(
-        data=df,
-        x='Tuition_fees_up_to_date',  # sekarang sudah Yes/No
-        hue='Status',
-        palette='Set2',
-        ax=ax2
-    )
-
-    ax2.set_xlabel("Pembayaran (Yes/No)")
-    ax2.set_ylabel("Jumlah")
-
-    for p in ax2.patches:
-        height = p.get_height()
-        if height > 0:
-            ax2.annotate(
-                f"{int(height)}",
-                (p.get_x() + p.get_width() / 2, height),
-                ha='center',
-                va='bottom',
-                xytext=(0, 3),
-                textcoords='offset points',
-                fontsize=9
-            )
-
+    sns.countplot(data=df_vis, x='Tuition_fees_up_to_date', hue='Status', ax=ax2)
     st.pyplot(fig2)
 
 # =========================
@@ -153,84 +105,44 @@ with col2:
 col3, col4 = st.columns(2)
 
 with col3:
-    st.markdown("### 3. Pengaruh beasiswa terhadap dropout")
-
+    st.markdown("### 3. Pengaruh Beasiswa")
     fig3, ax3 = plt.subplots()
-
-    sns.countplot(
-        data=df,
-        x='Scholarship_holder',  # sekarang sudah Yes/No
-        hue='Status',
-        palette='Set3',
-        ax=ax3
-    )
-
-    ax3.set_xlabel("Beasiswa (Yes/No)")
-    ax3.set_ylabel("Jumlah")
-
-    for p in ax3.patches:
-        height = p.get_height()
-        if height > 0:
-            ax3.annotate(
-                f"{int(height)}",
-                (p.get_x() + p.get_width() / 2, height),
-                ha='center',
-                va='bottom',
-                xytext=(0, 3),
-                textcoords='offset points',
-                fontsize=9
-            )
-
+    sns.countplot(data=df_vis, x='Scholarship_holder', hue='Status', ax=ax3)
     st.pyplot(fig3)
 
 with col4:
-    st.markdown("### 4. Pengaruh nilai semester 1 terhadap status siswa")
-
+    st.markdown("### 4. Nilai Semester 1")
     fig4, ax4 = plt.subplots()
-
-    sns.boxplot(
-        data=df,
-        x='Status',
-        y='Curricular_units_1st_sem_grade',
-        palette='pastel',
-        ax=ax4
-    )
-
+    sns.boxplot(data=df_vis, x='Status', y='Curricular_units_1st_sem_grade', ax=ax4)
     st.pyplot(fig4)
 
-st.markdown("---")
-
+# =========================
 # ROW 3
+# =========================
 col5, col6 = st.columns(2)
 
 with col5:
-    st.markdown("### 5. Pengaruh nilai semester 2 terhadap status siswa")
-
+    st.markdown("### 5. Nilai Semester 2")
     fig5, ax5 = plt.subplots()
-
-    sns.boxplot(
-        data=df,
-        x='Status',
-        y='Curricular_units_2nd_sem_grade',
-        palette='coolwarm',
-        ax=ax5
-    )
-
+    sns.boxplot(data=df_vis, x='Status', y='Curricular_units_2nd_sem_grade', ax=ax5)
     st.pyplot(fig5)
 
 # =========================
-# FEATURE IMPORTANCE
+# FEATURE IMPORTANCE (SUDAH FIX)
 # =========================
 with col6:
-    st.markdown("### 6. 10 Faktor Utama Dropout")
+    st.markdown("### 6. Faktor Utama Dropout")
 
     try:
         df_model = df.copy()
 
+        # 🔥 FILTER WAJIB
+        df_model = df_model[df_model['Status'].isin(['Dropout', 'Graduate'])]
+
+        # 🔥 LABEL BINER
         df_model['Status'] = df_model['Status'].map({
-            'Dropout': 0,
-            'Enrolled': 1,
-            'Graduate': 2
+            'Dropout': 1,
+            'Graduate': 0
         })
 
         X = df_model.select_dtypes(include=['int64', 'float64']).drop(columns=['Status'], errors='ignore')
@@ -245,21 +157,9 @@ with col6:
         feat_importance = feat_importance.sort_values(ascending=False)
 
         fig6, ax6 = plt.subplots()
+        feat_importance.head(10).plot(kind='barh', ax=ax6)
 
-        feat_importance.head(10).plot(
-            kind='barh',
-            ax=ax6,
-            color='#FF9800'
-        )
-
-        ax6.set_xlabel("Importance Score")
-        ax6.set_title("Top 10 Faktor Penyebab Dropout")
-
-        ax6.grid(axis='x', linestyle='--', alpha=0.5)
-
-        for i, v in enumerate(feat_importance.head(10)):
-            ax6.text(v, i, f"{v:.2f}", va='center')
-
+        ax6.set_title("Top 10 Faktor Dropout")
         ax6.invert_yaxis()
 
         st.pyplot(fig6)
