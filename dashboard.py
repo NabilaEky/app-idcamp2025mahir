@@ -91,7 +91,7 @@ with col1:
     st.pyplot(fig1)
 
 with col2:
-    st.markdown("### 2. Pengaruh Pembayaran")
+    st.markdown("### 2. Pengaruh pembayaran terhadap siswa dropout")
     fig2, ax2 = plt.subplots()
     sns.countplot(data=df_vis, x='Tuition_fees_up_to_date', hue='Status', ax=ax2)
     st.pyplot(fig2)
@@ -100,13 +100,13 @@ with col2:
 col3, col4 = st.columns(2)
 
 with col3:
-    st.markdown("### 3. Pengaruh Beasiswa")
+    st.markdown("### 3. Pengaruh beasiswa terhadap siswa dropout")
     fig3, ax3 = plt.subplots()
     sns.countplot(data=df_vis, x='Scholarship_holder', hue='Status', ax=ax3)
     st.pyplot(fig3)
 
 with col4:
-    st.markdown("### 4. Nilai Semester 1")
+    st.markdown("### 4. Pengaruh nilai semester 1 terhadap status siswa")
     fig4, ax4 = plt.subplots()
     sns.boxplot(data=df_vis, x='Status', y='Curricular_units_1st_sem_grade', ax=ax4)
     st.pyplot(fig4)
@@ -117,7 +117,7 @@ st.markdown("---")
 col5, col6 = st.columns(2)
 
 with col5:
-    st.markdown("### 5. Nilai Semester 2")
+    st.markdown("### 5. Pengaruh nilai semester 2 terhadap status siswa")
     fig5, ax5 = plt.subplots()
     sns.boxplot(data=df_vis, x='Status', y='Curricular_units_2nd_sem_grade', ax=ax5)
     st.pyplot(fig5)
@@ -126,7 +126,7 @@ with col5:
 # FEATURE IMPORTANCE 
 # =========================
 with col6:
-    st.markdown("### 6. Faktor Utama Dropout")
+    st.markdown("### 6. 10 Faktor Utama Dropout")
 
     try:
         df_model = df.copy()
