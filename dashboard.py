@@ -88,13 +88,13 @@ with col1:
     st.markdown("### 1. Distribusi Status")
     fig1, ax1 = plt.subplots()
     df_vis['Status'].value_counts().plot(kind='bar', ax=ax1)
-    st.pyplot(fig1)
+    st.pyplot(fig1, use_container_width=True)
 
 with col2:
     st.markdown("### 2. Pengaruh pembayaran terhadap siswa dropout")
     fig2, ax2 = plt.subplots()
     sns.countplot(data=df_vis, x='Tuition_fees_up_to_date', hue='Status', ax=ax2)
-    st.pyplot(fig2)
+    st.pyplot(fig2, use_container_width=True)
 
 # ROW 2
 col3, col4 = st.columns(2)
@@ -103,13 +103,13 @@ with col3:
     st.markdown("### 3. Pengaruh beasiswa terhadap siswa dropout")
     fig3, ax3 = plt.subplots()
     sns.countplot(data=df_vis, x='Scholarship_holder', hue='Status', ax=ax3)
-    st.pyplot(fig3)
+    st.pyplot(fig3, use_container_width=True)
 
 with col4:
     st.markdown("### 4. Pengaruh nilai semester 1 terhadap status siswa")
     fig4, ax4 = plt.subplots()
     sns.boxplot(data=df_vis, x='Status', y='Curricular_units_1st_sem_grade', ax=ax4)
-    st.pyplot(fig4)
+    st.pyplot(fig4, use_container_width=True)
 
 st.markdown("---")
 
@@ -120,7 +120,7 @@ with col5:
     st.markdown("### 5. Pengaruh nilai semester 2 terhadap status siswa")
     fig5, ax5 = plt.subplots()
     sns.boxplot(data=df_vis, x='Status', y='Curricular_units_2nd_sem_grade', ax=ax5)
-    st.pyplot(fig5)
+    st.pyplot(fig5, use_container_width=True)
 
 # =========================
 # FEATURE IMPORTANCE 
@@ -156,7 +156,7 @@ with col6:
         ax6.set_title("Top 10 Faktor Dropout")
         ax6.invert_yaxis()
 
-        st.pyplot(fig6)
+        st.pyplot(fig6, use_container_width=True)
 
     except Exception as e:
         st.error(f"Gagal membuat feature importance: {e}")
