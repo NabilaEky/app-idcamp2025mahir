@@ -37,11 +37,11 @@ required_cols = [
 
 for col in required_cols:
     if col not in df.columns:
-        st.error(f"Kolom '{col}' tidak ditemukan! Kolom tersedia: {df.columns}")
+        st.error(f"Kolom '{col}' tidak ditemukan!")
         st.stop()
 
 # =========================
-# FILTER DASHBOARD (SEMUA STATUS BOLEH)
+# FILTER DASHBOARD 
 # =========================
 st.sidebar.header("Filter Data")
 
@@ -63,7 +63,6 @@ graduate = len(df_filtered[df_filtered['Status'] == 'Graduate'])
 dropout_rate = (dropout / total) * 100 if total > 0 else 0
 
 col1, col2, col3 = st.columns(3)
-
 col1.metric("Total Mahasiswa", total)
 col2.metric("Dropout", dropout)
 col3.metric("Dropout Rate", f"{dropout_rate:.2f}%")
@@ -82,9 +81,7 @@ binary_cols = ['Tuition_fees_up_to_date', 'Scholarship_holder']
 for col in binary_cols:
     df_vis[col] = df_vis[col].map({0: "No", 1: "Yes"})
 
-# =========================
 # ROW 1
-# =========================
 col1, col2 = st.columns(2)
 
 with col1:
@@ -99,9 +96,7 @@ with col2:
     sns.countplot(data=df_vis, x='Tuition_fees_up_to_date', hue='Status', ax=ax2)
     st.pyplot(fig2)
 
-# =========================
 # ROW 2
-# =========================
 col3, col4 = st.columns(2)
 
 with col3:
@@ -116,9 +111,9 @@ with col4:
     sns.boxplot(data=df_vis, x='Status', y='Curricular_units_1st_sem_grade', ax=ax4)
     st.pyplot(fig4)
 
-# =========================
+st.markdown("---")
+
 # ROW 3
-# =========================
 col5, col6 = st.columns(2)
 
 with col5:
@@ -128,7 +123,7 @@ with col5:
     st.pyplot(fig5)
 
 # =========================
-# FEATURE IMPORTANCE (SUDAH FIX)
+# FEATURE IMPORTANCE 
 # =========================
 with col6:
     st.markdown("### 6. Faktor Utama Dropout")
@@ -136,7 +131,6 @@ with col6:
     try:
         df_model = df.copy()
 
-        # 🔥 FILTER WAJIB
         df_model = df_model[df_model['Status'].isin(['Dropout', 'Graduate'])]
 
         # 🔥 LABEL BINER
