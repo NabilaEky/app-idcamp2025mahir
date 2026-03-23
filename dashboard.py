@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestClassifier
 plt.style.use('default')
 sns.set_theme(style="whitegrid")
 
-st.set_page_config(page_title="Student Dropout Dashboard", layout="wide")
+st.set_page_config(page_title="Student Dropout Dashboard", layout="centered")
 
 st.title("🎓 Business Dashboard - Student Dropout Analysis")
 st.markdown("### 📊 Monitoring Faktor Penyebab Dropout Mahasiswa")
@@ -82,7 +82,8 @@ for col in binary_cols:
     df_vis[col] = df_vis[col].map({0: "No", 1: "Yes"})
 
 # ROW 1
-col1, col2 = st.columns(2)
+col1 = st.container()
+col2 = st.container()
 
 with col1:
     st.markdown("### 1. Distribusi Status")
@@ -99,7 +100,8 @@ with col2:
     st.pyplot(fig2, use_container_width=True)
 
 # ROW 2
-col3, col4 = st.columns(2)
+col3 = st.container()
+col4 = st.container()
 
 with col3:
     st.markdown("### 3. Pengaruh beasiswa terhadap siswa dropout")
@@ -118,7 +120,8 @@ with col4:
 st.markdown("---")
 
 # ROW 3
-col5, col6 = st.columns(2)
+col5 = st.container()
+col6 = st.container()
 
 with col5:
     st.markdown("### 5. Pengaruh nilai semester 2 terhadap status siswa")
