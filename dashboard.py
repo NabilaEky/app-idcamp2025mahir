@@ -23,7 +23,7 @@ def load_data():
     return df
 
 df = load_data()
-
+df = df[df['Status'].isin(['Dropout', 'Graduate'])]
 # =========================
 # VALIDASI KOLOM
 # =========================
